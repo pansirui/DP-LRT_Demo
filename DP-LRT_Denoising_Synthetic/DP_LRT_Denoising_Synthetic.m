@@ -18,12 +18,8 @@ All_data_Results_2_50 = cell(1,200);
 All_data_Results_2_60 = cell(1,200);
 All_data_Results_2_70 = cell(1,200);
 
-  
-% F = [0.1, 0.2, 0.5];   
-% G = [0.02, 0.04, 0.06, 0.08];
-
 F = 0.2;   
-G = 0.08;
+G = 0.06;
 
 for f = F
 
@@ -35,7 +31,7 @@ for f = F
             fn_noisy = [filename_noisy, '.mat'];
 
             ori = load (fn_clear);  
-            ori = ori.clear_40_40_300;
+            ori = ori.clean_40_40_300;
             ori = permute(ori, [2 3 1]);
             
             Y = load(fn_noisy); 
@@ -101,7 +97,7 @@ rho = Rho_Num(qq);
 iter_g = 25;  
 iter_x = 1;  
 
-fprintf('tau = %2.2f, alpha = %2.2f, beta = %2.2f, gamma = %2.2f, lambda1 = %2.2f, lambda2 = %2.2f, TR-rank = [%d %d %d], d = %d, rho = %d, iter_g = %d, iter_x = %d\n', tau,alpha,beta,gamma,lambda1,lambda2,r,d,rho,iter_g,iter_x)
+% fprintf('tau = %2.2f, alpha = %2.2f, beta = %2.2f, gamma = %2.2f, lambda1 = %2.2f, lambda2 = %2.2f, TR-rank = [%d %d %d], d = %d, rho = %d, iter_g = %d, iter_x = %d\n', tau,alpha,beta,gamma,lambda1,lambda2,r,d,rho,iter_g,iter_x)
 
 [PSNR_Final,FSIM_Final,SSIM_Final, ERGAS_Final, SAM_Final, Iters, Time_s] = TR_LSM_Denoising_Test (ori, Y, tau, alpha, beta, gamma, lambda1, lambda2, r, d, rho, iter_g, iter_x); 
 
@@ -110,7 +106,7 @@ PSNR_Gain = PSNR_Final - PSNR_Initial;
 m_10 = m_10 + 1;
 All_data_Results_2_10{m_10} = {filename_noisy, tau, alpha, beta, gamma, lambda1, lambda2, r(1), r(2), r(3), d, rho, iter_g, iter_x, PSNR_Final,FSIM_Final,SSIM_Final, ERGAS_Final, SAM_Final, Iters, Time_s, PSNR_Initial, PSNR_Gain};
  
-writecell( All_data_Results_2_10{m_10}, 'TR_PnP_Denoising_Test_manuscript.xls','Sheet',1,'WriteMode','append');
+writecell( All_data_Results_2_10{m_10}, 'DP_LRT_Denoising_Metric.xls','Sheet',1,'WriteMode','append');
  
 clearvars -except F G f g filename_noisy ori Y i j m n mm nn mn nm pp PSNR_Initial m_20 All_data_Results_2_20 m_30 All_data_Results_2_30 m_40 All_data_Results_2_40...
     m_10 All_data_Results_2_10 m_50 All_data_Results_2_50 m_60 All_data_Results_2_60 m_70 All_data_Results_2_70
@@ -155,3 +151,4 @@ end
  clearvars -except F G m_20 All_data_Results_2_20 m_30 All_data_Results_2_30 m_40 All_data_Results_2_40...
     m_10 All_data_Results_2_10 m_50 All_data_Results_2_50 m_60 All_data_Results_2_60 m_70 All_data_Results_2_70
 end  
+
