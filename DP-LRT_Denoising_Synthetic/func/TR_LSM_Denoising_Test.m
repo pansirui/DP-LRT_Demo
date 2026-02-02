@@ -13,10 +13,6 @@ Time_s = (etime(clock,time0));
 
 Xnew = Denoising{iter}; 
 
-% 添加保存Xnew的代码
-% save('Denoised_TR_PnP_40_40_300_20_6.mat','Xnew','-v7.3') ;
-save('Denoised_TR_PnP_40_40_300_20_8.mat','Xnew','-v7.3') ;
-
 output_image = ((Xnew - min(Xnew(:))) / (max(Xnew(:)) - min(Xnew(:))))*255;
 
 Ori_Image = ((ori - min(ori(:))) / (max(ori(:)) - min(ori(:))))*255;
@@ -26,4 +22,5 @@ Ori_Image = ((ori - min(ori(:))) / (max(ori(:)) - min(ori(:))))*255;
 [PSNR_Final, SSIM_Final, FSIM_Final, ERGAS_Final, SAM_Final] = MSIQA(Ori_Image, output_image);
 
 end
+
 
