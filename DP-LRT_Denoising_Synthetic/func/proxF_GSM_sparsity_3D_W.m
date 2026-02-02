@@ -1,16 +1,16 @@
 function [S] = proxF_GSM_sparsity_3D_W(y, mu1)
 
-    [m, n, p]     = size(y);  % 获取输入 y 的尺寸
+    [m, n, p]     = size(y); 
     
     W              =    20./abs(y);
      
     mu             =    mu1./(W.^2);  
     
     
-    theta0        = sqrt(sum(y.^2, 2) / n);  % 计算每个切片的theta0，得到 m x 1 x p
-    theta0        = repmat(theta0, [1, n, 1]);  % 将 theta0 复制到所有列上，得到 m x n x p
+    theta0        = sqrt(sum(y.^2, 2) / n);  
+    theta0        = repmat(theta0, [1, n, 1]); 
 
-    alpha         = y ./ (theta0 + eps);  % 对 theta0 进行广播，避免除以0
+    alpha         = y ./ (theta0 + eps);  
     a             = alpha.^2;
     b             = -2 * alpha .* y;
     c             = 4 * mu;
@@ -37,6 +37,7 @@ function [S] = proxF_GSM_sparsity_3D_W(y, mu1)
 
     aa            = y ./ (theta + eps);
     thr           = 2 * sqrt(2) * mu ./ (theta.^2 + eps);
-    alpha         = soft(aa, thr);  % 使用 soft 函数进行软阈值处理
+    alpha         = soft(aa, thr);
     S             = theta .* alpha;
 end
+
