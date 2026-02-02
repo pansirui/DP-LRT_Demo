@@ -3,7 +3,7 @@ function [Xnew] = UpdateXTen(Y,Z,Dx,Dy,B,Bx,By,alpha,beta,gamma,d,rho,iter_x,J)
 Xnew = zeros(size(Y));
 Bz = zeros(size(Y));
 
-thr = sqrt(rho/d); % 噪声水平
+thr = sqrt(rho/d);
 
 for i = 1:size(Y,3)
     y = Y(:,:,i); 
@@ -22,11 +22,7 @@ for i = 1:size(Y,3)
     bz = Bz(:,:,i);
     j = J(:,:,i);
 
-    for k=1:iter_x  %ADMM
-    
-        % xnew = Updatex(y,z,j,b,bx,by,bz,dx,dy,alpha,beta,gamma,d);
-        % jnew = FFD_Net_Denoiser (xnew - bz, thr); %FFDNet
-        % j = jnew;
+    for k=1:iter_x 
         
         jnew = FFD_Net_Denoiser (j - bz, thr); %FFDNet
         j = jnew/255;
@@ -41,4 +37,5 @@ for i = 1:size(Y,3)
     Xnew(:,:,i) = xnew;
 
 end
+
 end
