@@ -1,0 +1,38 @@
+function [X] = proxF_TR_Main(Y, tau, par)
+% X被约束为具有Tensor Ring结构，即X=TR(G1,G2,G3)
+% 通过交替优化逐个更新core tensors G{n}，以实现X≈Y且满足结构约束
+% Y是观测数据
+
+r = par.r;  % TR-rank
+maxiter = par.maxiter;  % iteration numbers of sovling each core tensor G_i
+
+N = ndims(Y);  % N = 3
+S = size(Y);
+G = TR_initcoreten(S,r);  
+% G is 3*1 cell, 对应三个core tensors
+
+iter = 0;
+while iter < maxiter
+      iter = iter+1;
+      % 交替更新每个core tensor G{n}
+      for n = 1:N
+      Q = tenmat_sb(Z_neq(G,n),2);  
+      % tenmat_sb实现了张量的mode-k展开，输出一个以第 k 维为行，其余维度展平成列的矩阵
+      Q=Q'; % Q is the right part of the relation equation
+
+	  % G{n} = Gfold((alpha*tenmat_sb(Y,n)*Q'+2*tau*Gunfold(G{n},2))/((alpha*(Q*Q')...
+      %       +2*tau*eye(size(Q,1),size(Q,1)))),size(G{n}),2);
+      G{n} = Gfold((tenmat_sb(Y,n)*Q'+2*tau*Gunfold(G{n},2))/(((Q*Q')...
+            +2*tau*eye(size(Q,1),size(Q,1)))),size(G{n}),2);
+      % 在这个优化过程中，G{n}变成矩阵形式。求解出闭式解后，再折叠成张量。
+      % Gfold(Gm, SGt, n)把mode-n展开的二维矩阵Gm恢复成原始三维张量，维度顺序为(R1, I, R2)
+      end
+end
+
+% 把core tensors转换为原张量
+X = coreten2tr(G);
+
+end
+
+% proxF_TR_Main是一个基于近端交替最小二乘（Proximal ALS）的方法，
+% 从观测张量Y中重建一个具有Tensor Ring结构的张量X，其中对每个G{n}的更新使用了闭式解
